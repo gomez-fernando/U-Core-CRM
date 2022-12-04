@@ -5,7 +5,7 @@ import Customer from '../components/Customer';
 export async function loader(){
   const customers = await getCustomers()
   console.log( customers)
-  return ;
+  return customers;
 }
 
 const Index = () => {

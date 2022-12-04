@@ -1,14 +1,15 @@
-import { useNavigate, Form, useActionData } from 'react-router-dom'
+import { useNavigate, Form, useActionData, redirect } from 'react-router-dom'
+import { createCustomer } from '../api/customers'
 import CustomerForm from '../components/CustomerForm'
 import Error from '../components/Error'
 
 export async function action({request}) {
   // const formData = await request.formData()
-
   // console.log([...formData])
 
   const data = Object.fromEntries(await request.formData())
   const email = data.email
+  console.log('email:'  + email)
 
   // Validation
   const errors = []
@@ -23,15 +24,17 @@ export async function action({request}) {
   }
 
   if(Object.keys(errors).length){
-    return errors
+    return errors;
   }
-  return null
+
+  await createCustomer(data)
+
+  return redirect('/')
 }
 
 function NewCustomer() {
   const errors = useActionData()
   const navigate = useNavigate()
-  console.log(errors);
 
   return (
     <>
@@ -45,7 +48,7 @@ function NewCustomer() {
         >Volver</button>
       </div>
 
-      <div className="bg-white shadow rounded-md md:w-3/4 mx-auto px-5 py-10 mt-20" >
+      <div className="bg-white shadow rounded-md md:w-3/4 mx-auto px-5 py-10 mt-10" >
         {errors?.length && errors.map((error, i) => <Error key={i}>{error}</Error>)}
 
         <Form method='post' noValidate>
@@ -53,7 +56,7 @@ function NewCustomer() {
           <div className="flex justify-center">
             <input
               type="submit"
-              className="mt-5 w-1/2 mx-auto bg-blue-800 p-3 uppercase font-bold text-white text-lg rounded-md"
+              className="mt-5 w-1/2 mx-auto bg-blue-800 p-3 uppercase font-bold text-white text-lg rounded-md hover:cursor-pointer hover:bg-blue-900"
               value="Registrar Cliente"
             />
           </div>
