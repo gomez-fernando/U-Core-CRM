@@ -1,12 +1,21 @@
-import { useNavigate, Form, useActionData, redirect } from 'react-router-dom'
-import { createCustomer } from '../api/customers'
-import CustomerForm from '../components/CustomerForm'
-import Error from '../components/Error'
+import { Form, useNavigate, useLoaderData, useActionData, redirect } from "react-router-dom";
+import { getCustomer, updateCustomer } from "../api/customers";
+import CustomerForm from "../components/CustomerForm";
+import Error from "../components/Error";
 
-export async function action({request}) {
-  // const formData = await request.formData()
-  // console.log([...formData])
+export async function loader({ params }) {
+  const customer = await getCustomer(params.id)
+  if (Object.values(customer).length === 0) {
+    throw new Response('', {
+      status: 404,
+      statusText: 'Cliente no encontrado'
+    })
+  }
 
+  return customer;
+}
+
+export async function action({request, params}){
   const data = Object.fromEntries(await request.formData())
   const email = data.email
 
@@ -26,19 +35,20 @@ export async function action({request}) {
     return errors;
   }
 
-  await createCustomer(data)
+  await updateCustomer(params.id, data)
 
   return redirect('/')
 }
 
-function NewCustomer() {
-  const errors = useActionData()
-  const navigate = useNavigate()
+const EditCustomer = () => {
+  const navigate = useNavigate();
+  const customer = useLoaderData();
+  const errors = useActionData();
 
   return (
     <>
-      <h1 className="font-black text-4xl text-blue-900">Nuevo Cliente</h1>
-      <p className="mt-3">Llena todos los campos para registrar un nuevo cliente</p>
+      <h1 className="font-black text-4xl text-blue-900">Editar Cliente</h1>
+      <p className="mt-3">Puedes editar los datos del cliente</p>
 
       <div className="flex justify-end">
         <button
@@ -51,12 +61,12 @@ function NewCustomer() {
         {errors?.length && errors.map((error, i) => <Error key={i}>{error}</Error>)}
 
         <Form method='post' noValidate>
-          <CustomerForm />
+          <CustomerForm customer={customer}/>
           <div className="flex justify-center">
             <input
               type="submit"
               className="mt-5 w-1/2 mx-auto bg-blue-800 p-3 uppercase font-bold text-white text-lg rounded-md hover:cursor-pointer hover:bg-blue-900"
-              value="Registrar Cliente"
+              value="Guardar Cambios"
             />
           </div>
         </Form>
@@ -65,4 +75,4 @@ function NewCustomer() {
   )
 }
 
-export default NewCustomer
+export default EditCustomer
