@@ -4,7 +4,7 @@
       "name": "Juan editado",
       "enterprise": "House style",
       "email": "juan@gmail.com",
-      "phone": "102013313",
+      "phone": "629053663",
       "notes": "editado",
       "id": 1
     },
@@ -28,21 +28,6 @@
       "phone": "629053663",
       "email": "miguel@gmail.com",
       "enterprise": "House style"
-    },
-    {
-      "id": 5,
-      "name": "Pedro",
-      "phone": "629053663",
-      "email": "pedro@juan.com",
-      "enterprise": "House style"
-    },
-    {
-      "id": 6,
-      "name": "rtt",
-      "enterprise": "Vander",
-      "email": "frenando.amazingweb@gmail.com",
-      "phone": "629053663",
-      "notes": "uuui"
     },
     {
       "name": "felipe",
